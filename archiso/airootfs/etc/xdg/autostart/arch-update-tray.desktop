@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Atualizações do sistema
+Exec=arch-update --tray
+Icon=arch-update
+X-GNOME-Autostart-enabled=true
+NoDisplay=true

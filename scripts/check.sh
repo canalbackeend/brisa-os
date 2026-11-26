@@ -3,4 +3,4 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 bats tests/static
-find scripts pkgs/brisa-strip-trademarks.sh tests/boot archiso/airootfs/usr/local/bin archiso/airootfs/usr/lib/brisa -type f -name "*" ! -name "*.txt" -exec shellcheck -x {} +
+find scripts pkgs/brisa-strip-trademarks.sh tests/boot archiso/airootfs/usr/local/bin archiso/airootfs/usr/lib/brisa archiso/airootfs/usr/bin -type f -name "*" ! -name "*.txt" -exec shellcheck -x {} +

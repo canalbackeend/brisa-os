@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Assistir no player
+Comment=Abre no player de vídeo o link copiado (YouTube e outros)
+Exec=brisa-assistir-no-player
+Icon=mpv
+Categories=AudioVideo;Video;Player;

@@ -1,3 +1,4 @@
 # Pacotes do AUR compilados no CI, NA ORDEM (dependências antes). Formato: <nome> <commit>
 ckbcomp 1b07c353a7a0352a5532315802ce9b895d73f29b
 calamares 167151beb537c06cb75c8dbfd409799ba308bb66
+arch-update a8392db2066f0ac0d69fd4fa436530f2d032d60e

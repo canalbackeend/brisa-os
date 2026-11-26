@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Abre no mpv (via yt-dlp) um link de vídeo: o do argumento ou o copiado.
+# uso: brisa-assistir-no-player [url]
+set -u
+url="${1:-$(wl-paste --no-newline 2>/dev/null || true)}"
+if [[ ! "$url" =~ ^https?://[^[:space:]]+$ ]]; then
+  notify-send -i mpv "Assistir no player" "Copie o link de um vídeo (https://...) e tente de novo." 2>/dev/null || true
+  echo "link inválido: '$url'" >&2
+  exit 1
+fi
+exec mpv "$url"
