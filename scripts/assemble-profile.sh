@@ -17,6 +17,18 @@ for d in efiboot syslinux grub; do
   [[ -d "$RELENG/$d" ]] && cp -R "$RELENG/$d" "$OUT/$d"
 done
 
+# Menus de boot herdados do releng: nome da distro no lugar de "Arch Linux".
+for d in efiboot syslinux grub; do
+  [[ -d "$OUT/$d" ]] || continue
+  { grep -rlI "Arch Linux" "$OUT/$d" 2>/dev/null || true; } | while IFS= read -r f; do
+    perl -pi -e 's/Arch Linux install medium/\@BRISA_NAME\@ Live/g; s/Arch Linux/\@BRISA_NAME\@/g' "$f"
+  done
+done
+rm -f "$OUT/syslinux/splash.png"
+if command -v rsvg-convert >/dev/null && [[ -d "$OUT/syslinux" ]]; then
+  rsvg-convert -w 640 -h 480 --keep-aspect-ratio "$ROOT/branding/wallpaper.svg" -o "$OUT/syslinux/splash.png"
+fi
+
 missing=()
 while IFS= read -r item; do
   [[ -z "$item" || "$item" == \#* ]] && continue
@@ -72,7 +84,7 @@ fi
 if [[ -d "$tmp/profile" ]]; then (cd "$tmp/profile" && tar -cf - .) | (cd "$OUT" && tar -xf -); fi
 
 ID_UPPER="$(printf '%s' "$BRISA_ID" | tr '[:lower:]' '[:upper:]')"
-grep -rlI '@BRISA_' "$OUT" 2>/dev/null | while IFS= read -r f; do
+{ grep -rlI '@BRISA_' "$OUT" 2>/dev/null || true; } | while IFS= read -r f; do
   BN="$BRISA_NAME" BI="$BRISA_ID" BU="$ID_UPPER" BA="$BRISA_ACCENT" perl -pi -e \
     's/\@BRISA_NAME\@/$ENV{BN}/g; s/\@BRISA_ID_UPPER\@/$ENV{BU}/g; s/\@BRISA_ID\@/$ENV{BI}/g; s/\@BRISA_ACCENT\@/$ENV{BA}/g' "$f"
 done
