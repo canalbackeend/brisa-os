@@ -20,6 +20,7 @@ file_permissions=(
   ["/root"]="0:0:750"
   ["/usr/local/bin/brisa-selftest"]="0:0:755"
   ["/usr/bin/brisa-assistir-no-player"]="0:0:755"
+  ["/usr/bin/brisa-pos-instalacao"]="0:0:755"
   ["/etc/sudoers.d/brisa-live"]="0:0:440"
   ["/usr/lib/brisa/selftest.d/"]="0:0:755"
 )

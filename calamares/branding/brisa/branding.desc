@@ -1,0 +1,34 @@
+---
+componentName:  @BRISA_ID@
+welcomeStyleCalamares: false
+welcomeExpandingLogo: true
+windowExpanding: normal
+windowSize: 800px,520px
+windowPlacement: center
+sidebar: widget
+navigation: widget
+
+strings:
+    productName:         "@BRISA_NAME@"
+    shortProductName:    "@BRISA_NAME@"
+    version:             ""
+    shortVersion:        ""
+    versionedName:       "@BRISA_NAME@"
+    shortVersionedName:  "@BRISA_NAME@"
+    bootloaderEntryName: "@BRISA_NAME@"
+    productUrl:          ""
+    supportUrl:          ""
+
+images:
+    productLogo:         "logo.svg"
+    productIcon:         "logo.svg"
+    productWelcome:      "logo.svg"
+
+slideshow:               "show.qml"
+slideshowAPI:            2
+
+style:
+    SidebarBackground:        "#1d1d2f"
+    SidebarText:              "#ffffff"
+    SidebarTextCurrent:       "#ffffff"
+    SidebarBackgroundCurrent: "@BRISA_ACCENT@"

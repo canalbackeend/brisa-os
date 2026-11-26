@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Instalar
+Comment=Instalar o sistema neste computador
+Exec=sudo -E calamares
+Icon=calamares
+Categories=System;

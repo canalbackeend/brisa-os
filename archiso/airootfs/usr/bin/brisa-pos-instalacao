@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Limpa o sistema recém-instalado (raiz <root>) de tudo que é só da sessão live.
+# Chamado pelo Calamares (shellprocess@limpeza, fora do chroot). Idempotente.
+# uso: brisa-pos-instalacao <root>
+set -euo pipefail
+root="${1:-}"
+if [[ -z "$root" || "$root" == / || ! -d "$root" ]]; then
+  echo "uso: $(basename "$0") <root> (diretório do sistema instalado, diferente de /)" >&2
+  exit 2
+fi
+BOOTMNT="${BRISA_BOOTMNT:-/run/archiso/bootmnt}"
+
+rm -rf \
+  "$root/etc/sddm.conf.d/10-brisa-live.conf" \
+  "$root/etc/sysusers.d/brisa-live.conf" \
+  "$root/etc/tmpfiles.d/brisa-live.conf" \
+  "$root/etc/sudoers.d/brisa-live" \
+  "$root/usr/share/applications/brisa-instalar.desktop" \
+  "$root/etc/systemd/system/multi-user.target.wants/brisa-selftest.service" \
+  "$root/etc/systemd/system/brisa-selftest.service" \
+  "$root/usr/local/bin/brisa-selftest" \
+  "$root/usr/lib/brisa/selftest.d" \
+  "$root/etc/mkinitcpio.conf.d/archiso.conf" \
+  "$root/etc/systemd/system/multi-user.target.wants/pacman-init.service" \
+  "$root/etc/systemd/system/pacman-init.service" \
+  "$root/etc/systemd/system/etc-pacman.d-gnupg.mount"
+
+# Preset padrão do mkinitcpio (o do live usa os hooks do archiso).
+mkdir -p "$root/etc/mkinitcpio.d"
+cat > "$root/etc/mkinitcpio.d/linux.preset" <<'PRESET'
+# mkinitcpio preset file for the 'linux' package
+ALL_kver="/boot/vmlinuz-linux"
+PRESETS=('default' 'fallback')
+default_image="/boot/initramfs-linux.img"
+fallback_image="/boot/initramfs-linux-fallback.img"
+fallback_options="-S autodetect"
+PRESET
+
+# Sem o repositório [brisa] (só existe na montagem da ISO).
+if [[ -f "$root/etc/pacman.conf" ]]; then
+  awk '/^\[brisa\]$/ {skip=1; next} /^\[/ {skip=0} !skip' "$root/etc/pacman.conf" > "$root/etc/pacman.conf.tmp"
+  mv "$root/etc/pacman.conf.tmp" "$root/etc/pacman.conf"
+fi
+
+# O archiso tira o kernel de /boot da imagem; copia do pendrive.
+if [[ -f "$BOOTMNT/arch/boot/x86_64/vmlinuz-linux" ]]; then
+  mkdir -p "$root/boot"
+  cp -f "$BOOTMNT/arch/boot/x86_64/vmlinuz-linux" "$root/boot/vmlinuz-linux"
+fi
+echo "limpeza pós-instalação concluída em $root"

@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+bats_require_minimum_version 1.5.0
 # Modo macOS: look-and-feel org.brisa.macos, padrões do sistema e brisa-aplicar-modo.
 
 setup() {
@@ -82,7 +83,7 @@ aplicar() {
 @test "brisa-aplicar-modo --sem-reiniciar-shell não aplica o LnF" {
   aplicar macos --sem-reiniciar-shell
   [ "$status" -eq 0 ]
-  ! grep -q 'plasma-apply-lookandfeel' "$BATS_TEST_TMPDIR/calls" 2>/dev/null
+  run ! grep -q 'plasma-apply-lookandfeel' "$BATS_TEST_TMPDIR/calls" 2>/dev/null
 }
 
 @test "brisa-aplicar-modo rejeita modo desconhecido em português" {

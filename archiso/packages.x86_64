@@ -67,3 +67,7 @@ flatpak
 wl-clipboard
 libnotify
 arch-update
+calamares
+grub
+efibootmgr
+os-prober

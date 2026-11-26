@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+bats_require_minimum_version 1.5.0
 # Programas: Chromium (VA-API + H.264 no YouTube), player, loja Flatpak, atualizador.
 
 setup() {
@@ -28,7 +29,7 @@ setup() {
   for p in chromium mpv yt-dlp discover flatpak wl-clipboard libnotify arch-update; do
     grep -qx "$p" "$ROOT/archiso/packages.x86_64" || { echo "faltando $p"; false; }
   done
-  ! grep -qx 'packagekit-qt6' "$ROOT/archiso/packages.x86_64"
+  run ! grep -qx 'packagekit-qt6' "$ROOT/archiso/packages.x86_64"
   grep -Eq '^arch-update [0-9a-f]{40}$' "$ROOT/aur/packages.txt"
 }
 
@@ -61,7 +62,7 @@ player() {
   player "ftp://x"
   [ "$status" -eq 1 ]
   grep -q 'notify .*link' "$BATS_TEST_TMPDIR/calls"
-  ! grep -q '^mpv' "$BATS_TEST_TMPDIR/calls"
+  run ! grep -q '^mpv' "$BATS_TEST_TMPDIR/calls"
 }
 
 @test "área de transferência vazia também é inválida" {
