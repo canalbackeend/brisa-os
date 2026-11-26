@@ -1,0 +1,12 @@
+[Unit]
+Description=Autoteste do live (marcadores BRISA: na serial)
+ConditionPathExists=/run/archiso
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/brisa-selftest
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

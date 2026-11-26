@@ -3,4 +3,4 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 bats tests/static
-find scripts -type f -exec shellcheck -x {} +
+find scripts tests/boot archiso/airootfs/usr/local/bin -type f -name "*" ! -name "*.txt" -exec shellcheck -x {} +

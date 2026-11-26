@@ -1,0 +1,84 @@
+name: Montar ISO
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y bats shellcheck jq
+      - run: scripts/check.sh
+
+  build:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Liberar espaço em disco
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
+      - uses: actions/checkout@v4
+      - name: Montar ISO no container Arch
+        run: |
+          mkdir -p out
+          docker run --rm --privileged -v "$PWD:/src:ro" -v "$PWD/out:/out" archlinux:latest \
+            bash -c "cp -a /src /build && /build/scripts/ci-build.sh /build /out"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iso
+          path: out/*.iso*
+          retention-days: 90
+          compression-level: 0
+
+  boot-test:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { fw: uefi, opts: "" }
+          - { fw: bios, opts: "" }
+          - { fw: uefi, opts: "--no-net" }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Habilitar KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules && sudo udevadm trigger --name-match=kvm
+      - run: sudo apt-get update && sudo apt-get install -y qemu-system-x86 ovmf imagemagick
+      - uses: actions/download-artifact@v4
+        with: { name: iso, path: iso }
+      - name: Teste de boot
+        run: tests/boot/boot-test.sh ${{ matrix.opts }} iso/*.iso ${{ matrix.fw }} 900
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot-${{ matrix.fw }}${{ matrix.opts }}
+          path: out/
+
+  publish:
+    needs: boot-test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: iso, path: iso }
+      - name: Publicar Release (se a ISO tiver menos de 2 GB)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          iso=$(ls iso/*.iso)
+          size=$(stat -c%s "$iso")
+          if [ "$size" -ge 2147483648 ]; then
+            echo "ISO com $size bytes (>= 2 GB): disponível só como artifact do workflow."
+            exit 0
+          fi
+          tag="v$(date +%Y.%m.%d)-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" "$iso" "$iso.sha256" --repo "$GITHUB_REPOSITORY" \
+            --title "$tag" --notes "ISO gerada automaticamente. Veja docs/guia.md para gravar e instalar."

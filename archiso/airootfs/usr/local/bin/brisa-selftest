@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Autoteste do live: roda /usr/lib/brisa/selftest.d/*.sh em ordem e grava cada
+# linha "BRISA:chave=valor" no journal (stdout) e na porta serial (lida pelo CI).
+set -u
+DIR="${BRISA_SELFTEST_DIR:-/usr/lib/brisa/selftest.d}"
+SERIAL="${BRISA_SERIAL:-/dev/ttyS0}"
+
+emit() {
+  echo "$1"
+  if [[ -w "$SERIAL" ]]; then echo "$1" >> "$SERIAL"; fi
+}
+
+emit "BRISA:boot=ok"
+export LC_ALL=C
+for script in "$DIR"/*.sh; do
+  [[ -x "$script" ]] || continue
+  name="$(basename "$script")"
+  if out="$("$script" 2>/dev/null)"; then rc=0; else rc=$?; fi
+  while IFS= read -r line; do
+    [[ "$line" == BRISA:* ]] && emit "$line"
+  done <<< "$out"
+  [[ $rc -eq 0 ]] || emit "BRISA:erro=$name"
+done
+emit "BRISA:selftest=done"
