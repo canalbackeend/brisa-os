@@ -176,10 +176,10 @@ Layout:
 
 ### 7.7 Modo macOS — atalhos
 
-A tecla Super (Windows) faz o papel do ⌘. Implementação: **keyd** (decidido pelo usuário em 2026-11-26: Toshy exige internet e instalação por usuário, inviável na ISO). Toshy (remapeamento
-consciente de aplicativo, compatível com KWin Wayland), pré-instalado no sistema.
-Se o Toshy não puder ser pré-instalado de forma confiável na ISO, o construtor deve
-parar e reportar antes de adotar alternativa (ex. `keyd` com mapeamento global).
+A tecla Super (Windows) faz o papel do ⌘. Implementação: **keyd** (sistêmico, funciona sem
+internet). Decidido pelo usuário em 2026-11-26, depois que o Toshy se mostrou inviável na ISO
+(instala por usuário e baixa componentes da internet). ⌘C/⌘V/⌘X viram Ctrl+Insert/Shift+Insert/
+Shift+Delete, que copiam e colam também no terminal.
 
 Atalhos mínimos que precisam funcionar:
 - Super+C/V/X/Z/A/S/F/T/W/Q (copiar, colar, recortar, desfazer, selecionar tudo,
