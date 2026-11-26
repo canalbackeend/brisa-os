@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <title>Papel de parede Brisa</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b1055"/><stop offset=".45" stop-color="#7597de"/>
+      <stop offset=".8" stop-color="#f4a6a6"/><stop offset="1" stop-color="#ffd6a5"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".7" cy=".3" r=".6">
+      <stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <path d="M0 760 C480 640 900 900 1920 700 L1920 1080 L0 1080 Z" fill="#fff" fill-opacity=".08"/>
+  <path d="M0 860 C600 760 1100 980 1920 820 L1920 1080 L0 1080 Z" fill="#fff" fill-opacity=".07"/>
+</svg>
