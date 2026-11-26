@@ -2,7 +2,7 @@ name: Montar ISO
 
 on:
   push:
-    branches: [main]
+    branches: [main, fase1-macos]
   workflow_dispatch:
 
 permissions:
@@ -64,7 +64,7 @@ jobs:
 
   publish:
     needs: boot-test
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4

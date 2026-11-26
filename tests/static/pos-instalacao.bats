@@ -18,6 +18,7 @@ setup() {
   printf 'archiso preset\n' > "$T/etc/mkinitcpio.d/linux.preset"
   printf '[options]\nHoldPkg = pacman\n\n[core]\nInclude = x\n\n[brisa]\nSigLevel = Optional TrustAll\nServer = file:///repo\n\n[extra]\nInclude = x\n' > "$T/etc/pacman.conf"
   echo kernel > "$BM/arch/boot/x86_64/vmlinuz-linux"
+  mkdir -p "$T/usr/lib/modules/6.12.1-arch1-1"; echo kernel > "$T/usr/lib/modules/6.12.1-arch1-1/vmlinuz"
 }
 
 @test "remove itens do live e mantém o greeter Wayland" {
@@ -58,4 +59,26 @@ setup() {
   [ "$status" -ne 0 ]
   run "$BIN" "$BATS_TEST_TMPDIR/nao-existe"
   [ "$status" -ne 0 ]
+}
+
+@test "C4: kernel copiado do próprio sistema instalado (sem depender do pendrive)" {
+  rm -rf "$BM"; mkdir -p "$T/usr/lib/modules/6.12.1-arch1-1"; echo kalvo > "$T/usr/lib/modules/6.12.1-arch1-1/vmlinuz"
+  BRISA_BOOTMNT="$BM" run "$BIN" "$T"
+  [ "$status" -eq 0 ]
+  [ "$(cat "$T/boot/vmlinuz-linux")" = kalvo ]
+}
+
+@test "C4: falha alto se nenhum kernel acabar em /boot" {
+  rm -rf "$BM" "$T/usr/lib/modules"
+  BRISA_BOOTMNT="$BM" run "$BIN" "$T"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"kernel"* ]]
+}
+
+@test "C5: root fica bloqueado (sem senha vazia) no sistema instalado" {
+  printf 'root::14871::::::\nbin:!*:19000::::::\n' > "$T/etc/shadow"
+  BRISA_BOOTMNT="$BM" run "$BIN" "$T"
+  [ "$status" -eq 0 ]
+  grep -q '^root:!\*:' "$T/etc/shadow"
+  grep -qx 'bin:!\*:19000::::::' "$T/etc/shadow"
 }

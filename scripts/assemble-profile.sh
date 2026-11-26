@@ -24,6 +24,11 @@ for d in efiboot syslinux grub; do
     perl -pi -e 's/Arch Linux install medium/\@BRISA_NAME\@ Live/g; s/Arch Linux/\@BRISA_NAME\@/g' "$f"
   done
 done
+# Sessão live com 2G de espaço gravável (padrão do archiso: 256M).
+for f in "$OUT"/efiboot/loader/entries/*.conf "$OUT"/syslinux/*.cfg "$OUT"/grub/*.cfg; do
+  [[ -f "$f" ]] || continue
+  perl -pi -e 's/(archisobasedir=\S+.*?)$/$1 cow_spacesize=2G/ if /archisobasedir=/ && !/cow_spacesize=/' "$f"
+done
 rm -f "$OUT/syslinux/splash.png"
 if command -v rsvg-convert >/dev/null && [[ -d "$OUT/syslinux" ]]; then
   rsvg-convert -w 640 -h 480 --keep-aspect-ratio "$ROOT/branding/wallpaper.svg" -o "$OUT/syslinux/splash.png"

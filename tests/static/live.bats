@@ -65,3 +65,19 @@ setup() {
     run "$ROOT/archiso/airootfs/usr/lib/brisa/selftest.d/10-plasma.sh"
   [[ "$output" == *"BRISA:baloo=off"* ]]
 }
+
+@test "I1: no live a tela não bloqueia sozinha (usuário live não tem senha)" {
+  grep -q '^f+ /home/live/.config/kscreenlockerrc .*Autolock=false.*LockOnResume=false' "$E/tmpfiles.d/brisa-live.conf"
+  [ ! -e "$E/skel/.config/kscreenlockerrc" ]
+}
+
+@test "I2: sistema tem servidor de pacotes configurado" {
+  grep -q '^Server = https://geo.mirror.pkgbuild.com/\$repo/os/\$arch' "$E/pacman.d/mirrorlist"
+}
+
+@test "I4: autoteste sem ciclo de ordenação com multi-user.target" {
+  f="$E/systemd/system/brisa-selftest.service"
+  run grep -x 'After=multi-user.target' "$f"
+  [ "$status" -eq 1 ]
+  grep -qx 'Type=simple' "$f"
+}

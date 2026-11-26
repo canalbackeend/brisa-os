@@ -42,9 +42,25 @@ if [[ -f "$root/etc/pacman.conf" ]]; then
   mv "$root/etc/pacman.conf.tmp" "$root/etc/pacman.conf"
 fi
 
-# O archiso tira o kernel de /boot da imagem; copia do pendrive.
-if [[ -f "$BOOTMNT/arch/boot/x86_64/vmlinuz-linux" ]]; then
-  mkdir -p "$root/boot"
-  cp -f "$BOOTMNT/arch/boot/x86_64/vmlinuz-linux" "$root/boot/vmlinuz-linux"
+# O archiso tira o kernel de /boot da imagem. O pacote linux guarda uma cópia em
+# /usr/lib/modules/<versão>/vmlinuz; usa essa (não depende do pendrive estar montado).
+mkdir -p "$root/boot"
+kernel=""
+for k in "$root"/usr/lib/modules/*/vmlinuz; do
+  if [[ -f "$k" ]]; then kernel="$k"; fi
+done
+if [[ -z "$kernel" && -f "$BOOTMNT/arch/boot/x86_64/vmlinuz-linux" ]]; then
+  kernel="$BOOTMNT/arch/boot/x86_64/vmlinuz-linux"
+fi
+if [[ -z "$kernel" ]]; then
+  echo "erro: nenhum kernel encontrado para copiar para $root/boot" >&2
+  exit 1
+fi
+cp -f "$kernel" "$root/boot/vmlinuz-linux"
+
+# A sessão live deixa o root sem senha; no sistema instalado ele fica bloqueado
+# (o usuário criado no instalador usa sudo).
+if [[ -f "$root/etc/shadow" ]]; then
+  sed -i.bak -e 's/^root::/root:!*:/' "$root/etc/shadow" && rm -f "$root/etc/shadow.bak"
 fi
 echo "limpeza pós-instalação concluída em $root"

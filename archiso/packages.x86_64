@@ -71,3 +71,7 @@ calamares
 grub
 efibootmgr
 os-prober
+rsync
+dosfstools
+e2fsprogs
+btrfs-progs

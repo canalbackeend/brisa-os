@@ -34,3 +34,19 @@ setup() {
   g="$ROOT/docs/guia.md"
   for t in balenaEtcher "Secure Boot" "shasum -a 256" "Instalar" "Releases"; do grep -q "$t" "$g" || { echo "faltando: $t"; false; }; done
 }
+
+@test "I5: sessão live com 2G de espaço gravável em todas as entradas de boot" {
+  printf 'options  archisobasedir=%%INSTALL_DIR%% archisosearchuuid=%%ARCHISO_UUID%%\n' >> "$R/efiboot/loader/entries/01-archiso-linux.conf"
+  printf 'APPEND archisobasedir=%%INSTALL_DIR%% archisosearchuuid=%%ARCHISO_UUID%%\n' >> "$R/syslinux/archiso_sys-linux.cfg"
+  printf '    linux /%%INSTALL_DIR%%/boot/x86_64/vmlinuz-linux archisobasedir=%%INSTALL_DIR%% archisosearchuuid=%%ARCHISO_UUID%%\n' >> "$R/grub/grub.cfg"
+  RELENG_KEEP="$BATS_TEST_TMPDIR/keep" run "$ROOT/scripts/assemble-profile.sh" "$R" "$BATS_TEST_TMPDIR/p2"
+  for f in efiboot/loader/entries/01-archiso-linux.conf syslinux/archiso_sys-linux.cfg grub/grub.cfg; do
+    grep -q 'archisobasedir=.* cow_spacesize=2G' "$BATS_TEST_TMPDIR/p2/$f" || { echo "sem cow_spacesize: $f"; false; }
+  done
+}
+
+@test "I6: workflow roda também no branch de trabalho; Release só no main" {
+  W="$ROOT/.github/workflows/build-iso.yml"
+  grep -q 'fase1-macos' "$W"
+  grep -q "github.ref == 'refs/heads/main'" "$W"
+}
