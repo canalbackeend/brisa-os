@@ -70,6 +70,10 @@ cp "$ROOT"/modes/macos/config/xdg/* "$A/etc/xdg/"
 cp -R "$ROOT/modes/macos/config/skel/." "$A/etc/skel/"
 for v in gtk-3.0 gtk-4.0; do mkdir -p "$A/etc/$v"; cp "$ROOT/modes/macos/config/$v/settings.ini" "$A/etc/$v/"; done
 
+# Atalhos estilo Mac (keyd, sistêmico).
+mkdir -p "$A/etc/keyd"
+cp "$ROOT/modes/macos/keyd/default.conf" "$A/etc/keyd/default.conf"
+
 # Instalador (Calamares).
 mkdir -p "$A/etc/calamares"
 cp -R "$ROOT/calamares/." "$A/etc/calamares/"

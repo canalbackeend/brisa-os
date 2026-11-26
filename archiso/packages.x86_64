@@ -75,3 +75,4 @@ rsync
 dosfstools
 e2fsprogs
 btrfs-progs
+keyd
