@@ -1,0 +1,26 @@
+# Ícones MacTahoe (vinceliuice), pinados, sem logos de terceiros e com o logo da distro.
+pkgname=brisa-mactahoe-icons
+_commit=839848b9a8a38a92a6936e30c4abe35cc6f2546d
+pkgver=0.r1
+pkgrel=1
+pkgdesc="Tema de ícones MacTahoe empacotado para a distro"
+arch=('any')
+url="https://github.com/vinceliuice/MacTahoe-icon-theme"
+license=('GPL-3.0-or-later')
+makedepends=('git' 'gtk-update-icon-cache')
+options=('!strip')
+source=("MacTahoe-icon-theme::git+https://github.com/vinceliuice/MacTahoe-icon-theme.git#commit=839848b9a8a38a92a6936e30c4abe35cc6f2546d")
+sha256sums=('SKIP')
+
+brisa_strip_trademarks() { "$startdir/../brisa-strip-trademarks.sh" "$1"; }
+
+package() {
+  cd MacTahoe-icon-theme
+  mkdir -p "$pkgdir/usr/share/icons"
+  ./install.sh -d "$pkgdir/usr/share/icons" -t default
+  brisa_strip_trademarks "$pkgdir/usr/share/icons"
+  for t in "$pkgdir"/usr/share/icons/MacTahoe*; do
+    install -Dm644 "$startdir/../../branding/logo.svg" "$t/places/scalable/start-here.svg"
+    install -Dm644 "$startdir/../../branding/logo.svg" "$t/apps/scalable/distributor-logo.svg"
+  done
+}

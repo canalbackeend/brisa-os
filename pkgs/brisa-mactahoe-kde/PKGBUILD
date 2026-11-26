@@ -1,0 +1,32 @@
+# Tema KDE MacTahoe (vinceliuice): decoração Aurorae, Plasma, cores, Kvantum e layouts.
+# Instalado como usuário comum num HOME falso no build() e movido para /usr/share.
+# Papéis de parede e tema SDDM do projeto NÃO são incluídos (a distro usa os próprios).
+pkgname=brisa-mactahoe-kde
+pkgver=0.r1
+pkgrel=1
+pkgdesc="Tema KDE Plasma MacTahoe empacotado para a distro"
+arch=('any')
+url="https://github.com/vinceliuice/MacTahoe-kde"
+license=('GPL-3.0-or-later')
+depends=('kvantum')
+makedepends=('git')
+source=("MacTahoe-kde::git+https://github.com/vinceliuice/MacTahoe-kde.git#commit=cbf6a1f71b591d143184855d62f6272ce533e7c3")
+sha256sums=('SKIP')
+
+brisa_strip_trademarks() { "$startdir/../brisa-strip-trademarks.sh" "$1"; }
+
+build() {
+  cd MacTahoe-kde
+  mkdir -p "$srcdir/home"
+  HOME="$srcdir/home" ./install.sh
+}
+
+package() {
+  local h="$srcdir/home"
+  install -d "$pkgdir/usr/share"
+  cp -r "$h/.local/share/." "$pkgdir/usr/share/"
+  rm -rf "$pkgdir/usr/share/wallpapers"
+  install -d "$pkgdir/usr/share/Kvantum"
+  cp -r "$h/.config/Kvantum/." "$pkgdir/usr/share/Kvantum/"
+  brisa_strip_trademarks "$pkgdir/usr/share"
+}

@@ -1,0 +1,26 @@
+# Tema GTK MacTahoe (vinceliuice), pinado, sem logos de terceiros.
+pkgname=brisa-mactahoe-gtk
+pkgver=0.r1
+pkgrel=1
+pkgdesc="Tema GTK MacTahoe empacotado para a distro"
+arch=('any')
+url="https://github.com/vinceliuice/MacTahoe-gtk-theme"
+license=('MIT')
+depends=('gtk-engine-murrine')
+makedepends=('git' 'sassc' 'glib2' 'libxml2')
+source=("MacTahoe-gtk-theme::git+https://github.com/vinceliuice/MacTahoe-gtk-theme.git#commit=1e45e19f510edb8cde18fa84d6cd5319f60b086b")
+sha256sums=('SKIP')
+
+brisa_strip_trademarks() { "$startdir/../brisa-strip-trademarks.sh" "$1"; }
+
+build() {
+  cd MacTahoe-gtk-theme
+  mkdir -p "$srcdir/home" "$srcdir/themes"
+  HOME="$srcdir/home" ./install.sh -d "$srcdir/themes"
+}
+
+package() {
+  install -d "$pkgdir/usr/share/themes"
+  cp -r "$srcdir"/themes/* "$pkgdir/usr/share/themes/"
+  brisa_strip_trademarks "$pkgdir/usr/share/themes"
+}
