@@ -1,2 +1,4 @@
 boot=ok
 selftest=done
+plasma=ok
+baloo=off
