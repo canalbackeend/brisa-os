@@ -5,7 +5,7 @@ set -euo pipefail
 [[ $# -eq 2 ]] || { echo "uso: $(basename "$0") <src_dir> <out_dir>" >&2; exit 2; }
 SRC="$1"; OUT="$2"
 
-pacman -Syu --noconfirm --needed archiso git base-devel sudo perl
+pacman -Syu --noconfirm --needed archiso git base-devel sudo perl librsvg
 if [[ -x "$SRC/scripts/build-repo.sh" ]]; then "$SRC/scripts/build-repo.sh" /repo; fi
 
 "$SRC/scripts/assemble-profile.sh" /usr/share/archiso/configs/releng /work/profile

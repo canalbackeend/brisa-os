@@ -1,0 +1,12 @@
+{
+  "KPackageStructure": "Plasma/LookAndFeel",
+  "KPlugin": {
+    "Authors": [{ "Name": "@BRISA_NAME@" }],
+    "Description": "Modo macOS do @BRISA_NAME@: barra superior com menu global e dock",
+    "Id": "org.brisa.macos",
+    "License": "GPL-3.0-or-later",
+    "Name": "@BRISA_NAME@ — modo macOS",
+    "Version": "1.0"
+  },
+  "X-Plasma-APIVersion": "2"
+}

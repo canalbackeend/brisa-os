@@ -2,3 +2,6 @@ boot=ok
 selftest=done
 plasma=ok
 baloo=off
+macos_appmenu=ok
+macos_dock=ok
+macos_buttons_left=ok

@@ -43,6 +43,26 @@ mkdir -p "$OUT/airootfs/usr/share/pixmaps"
 # shellcheck source=/dev/null
 source "$CONF"
 cp "$ROOT/branding/logo.svg" "$OUT/airootfs/usr/share/pixmaps/$BRISA_ID-logo.svg"
+# Modos de interface: padrões do sistema = modo macOS; arquivos completos para troca.
+A="$OUT/airootfs"
+mkdir -p "$A/usr/share/brisa" "$A/usr/share/plasma/look-and-feel" "$A/usr/bin" "$A/etc/xdg" "$A/etc/skel"
+cp -R "$ROOT/modes" "$A/usr/share/brisa/modes"
+cp -R "$ROOT/modes/macos/look-and-feel/org.brisa.macos" "$A/usr/share/plasma/look-and-feel/"
+cp "$ROOT/scripts/brisa-aplicar-modo" "$A/usr/bin/"
+cp "$ROOT"/modes/macos/config/xdg/* "$A/etc/xdg/"
+cp -R "$ROOT/modes/macos/config/skel/." "$A/etc/skel/"
+for v in gtk-3.0 gtk-4.0; do mkdir -p "$A/etc/$v"; cp "$ROOT/modes/macos/config/$v/settings.ini" "$A/etc/$v/"; done
+
+# Papel de parede (pacote de wallpaper do Plasma).
+W="$A/usr/share/wallpapers/$BRISA_ID"; mkdir -p "$W/contents/images"
+printf '{"KPlugin":{"Id":"%s","Name":"%s","License":"CC-BY-SA-4.0"}}\n' "$BRISA_ID" "$BRISA_NAME" > "$W/metadata.json"
+if command -v rsvg-convert >/dev/null; then
+  rsvg-convert -w 1920 -h 1080 "$ROOT/branding/wallpaper.svg" -o "$W/contents/images/1920x1080.png"
+  rsvg-convert -w 1366 -h 768 "$ROOT/branding/wallpaper.svg" -o "$W/contents/images/1366x768.png"
+else
+  cp "$ROOT/branding/wallpaper.svg" "$W/contents/images/1920x1080.svg"
+fi
+
 if [[ -d "$tmp/profile" ]]; then (cd "$tmp/profile" && tar -cf - .) | (cd "$OUT" && tar -xf -); fi
 
 ID_UPPER="$(printf '%s' "$BRISA_ID" | tr '[:lower:]' '[:upper:]')"

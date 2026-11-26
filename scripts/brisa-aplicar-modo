@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Aplica um modo de interface ao usuário atual.
+# uso: brisa-aplicar-modo <macos> [--sem-reiniciar-shell]
+set -euo pipefail
+MODES_DIR="${BRISA_MODES_DIR:-/usr/share/brisa/modes}"
+DISPONIVEIS="macos"
+
+modo="${1:-}"; shift || true
+reiniciar=1
+for a in "$@"; do
+  case "$a" in
+    --sem-reiniciar-shell) reiniciar=0 ;;
+    *) echo "opção desconhecida: $a" >&2; exit 2 ;;
+  esac
+done
+if [[ " $DISPONIVEIS " != *" $modo "* || ! -d "$MODES_DIR/$modo" ]]; then
+  echo "modo desconhecido: '${modo}' (disponíveis: $DISPONIVEIS)" >&2
+  exit 2
+fi
+
+src="$MODES_DIR/$modo/config"
+cfg="${XDG_CONFIG_HOME:-$HOME/.config}"
+mkdir -p "$cfg/brisa"
+cp -f "$src"/xdg/* "$cfg/"
+cp -rf "$src/skel/.config/." "$cfg/"
+for v in gtk-3.0 gtk-4.0; do mkdir -p "$cfg/$v"; cp -f "$src/$v/settings.ini" "$cfg/$v/settings.ini"; done
+
+if (( reiniciar )); then
+  plasma-apply-lookandfeel -a "org.brisa.$modo" --resetLayout
+  qdbus6 org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
+fi
+echo "$modo" > "$cfg/brisa/modo"
+echo "modo '$modo' aplicado."
