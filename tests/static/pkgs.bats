@@ -57,3 +57,15 @@ setup() { ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"; }
   grep -q 'release/MacTahoe-Light.tar.xz' "$f"
   grep -q 'release/MacTahoe-Dark.tar.xz' "$f"
 }
+
+@test "ícones que imitam Finder e App Store são substituídos por arte própria" {
+  f="$ROOT/pkgs/brisa-mactahoe-icons/PKGBUILD"
+  for n in file-manager softwarecenter system-software-install; do
+    grep -q "apps/scalable/$n.svg" "$f" || { echo "não substitui $n"; false; }
+  done
+  grep -q 'branding/icons/arquivos.svg' "$f"
+  grep -q 'branding/icons/loja.svg' "$f"
+  for i in arquivos loja; do
+    xmllint --noout "$ROOT/branding/icons/$i.svg"
+  done
+}

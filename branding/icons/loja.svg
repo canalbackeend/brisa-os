@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <title>Loja</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff9a5c"/><stop offset="1" stop-color="#e8458b"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="26" fill="url(#bg)"/>
+  <path d="M50 48 v-6 a14 14 0 0 1 28 0 v6" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M34 48 h60 l-5 44 a6 6 0 0 1 -6 5 H45 a6 6 0 0 1 -6 -5 Z" fill="#ffffff"/>
+  <circle cx="54" cy="62" r="3.5" fill="#e8458b"/><circle cx="74" cy="62" r="3.5" fill="#e8458b"/>
+</svg>

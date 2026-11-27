@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <title>Arquivos</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5ec2ff"/><stop offset="1" stop-color="#1f7de6"/>
+    </linearGradient>
+    <linearGradient id="fr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e3efff"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="26" fill="url(#bg)"/>
+  <path d="M30 42 a6 6 0 0 1 6-6 h18 l8 8 h30 a6 6 0 0 1 6 6 v4 H30 Z" fill="#ffffff" fill-opacity=".75"/>
+  <rect x="28" y="50" width="72" height="46" rx="7" fill="url(#fr)"/>
+  <rect x="44" y="70" width="40" height="5" rx="2.5" fill="#1f7de6" fill-opacity=".35"/>
+</svg>

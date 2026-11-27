@@ -20,6 +20,13 @@ package() {
   ./install.sh -d "$pkgdir/usr/share/icons" -t default
   brisa_strip_trademarks "$pkgdir/usr/share/icons"
   for t in "$pkgdir"/usr/share/icons/MacTahoe*; do
+    # Ícones que imitam o Finder e a App Store: arte própria da distro.
+    install -Dm644 "$startdir/../../branding/icons/arquivos.svg" "$t/apps/scalable/file-manager.svg"
+    if [[ -e "$t/apps/22/system-file-manager.svg" ]]; then
+      install -m644 "$startdir/../../branding/icons/arquivos.svg" "$t/apps/22/system-file-manager.svg"
+    fi
+    install -Dm644 "$startdir/../../branding/icons/loja.svg" "$t/apps/scalable/softwarecenter.svg"
+    install -Dm644 "$startdir/../../branding/icons/loja.svg" "$t/apps/scalable/system-software-install.svg"
     install -Dm644 "$startdir/../../branding/logo.svg" "$t/places/scalable/start-here.svg"
     install -Dm644 "$startdir/../../branding/logo.svg" "$t/apps/scalable/distributor-logo.svg"
   done
