@@ -6,7 +6,6 @@ pkgdesc="Tema GTK MacTahoe empacotado para a distro"
 arch=('any')
 url="https://github.com/vinceliuice/MacTahoe-gtk-theme"
 license=('MIT')
-depends=('gtk-engine-murrine')
 makedepends=('git' 'sassc' 'glib2' 'libxml2')
 source=("MacTahoe-gtk-theme::git+https://github.com/vinceliuice/MacTahoe-gtk-theme.git#commit=1e45e19f510edb8cde18fa84d6cd5319f60b086b")
 sha256sums=('SKIP')

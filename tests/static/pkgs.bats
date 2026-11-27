@@ -44,3 +44,8 @@ setup() { ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"; }
   [ -f "$d/a/folder.svg" ]
   [ ! -e "$d/a/activities-apple.svg" ] && [ ! -e "$d/a/distributor-logo-windows.svg" ] && [ ! -e "$d/a/start-here.svg" ] && [ ! -e "$d/a/AppleLogo.png" ]
 }
+
+@test "tema GTK não depende de gtk-engine-murrine (fora dos repositórios oficiais)" {
+  run grep -q 'gtk-engine-murrine' "$ROOT/pkgs/brisa-mactahoe-gtk/PKGBUILD"
+  [ "$status" -eq 1 ]
+}
