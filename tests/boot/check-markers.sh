@@ -5,7 +5,7 @@ set -euo pipefail
 log="$1"; shift
 missing=()
 for kv in "$@"; do
-  tr -d '\r' < "$log" | grep -qxF "BRISA:$kv" || missing+=("$kv")
+  tr -d '\r' < "$log" | grep -qE "BRISA:${kv}\$" || missing+=("$kv")
 done
 if (( ${#missing[@]} )); then
   echo "marcadores ausentes: ${missing[*]}"

@@ -6,7 +6,7 @@
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-net=(-nic "user,model=virtio-net-pci"); res="1366x768"; tag=""
+net=(-nic "user,model=virtio-net-pci"); res="1360x768"; tag=""
 while [[ "${1:-}" == --* ]]; do
   case "$1" in
     --no-net) net=(-nic none); tag="-nonet"; shift ;;

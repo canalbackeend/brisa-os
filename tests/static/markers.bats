@@ -22,3 +22,15 @@ setup() {
   run "$ROOT/tests/boot/check-markers.sh" "$LOG" plasma=falhou
   [ "$status" -eq 1 ]
 }
+
+@test "marcador no fim de uma linha com códigos do menu de boot UEFI ainda conta" {
+  printf '\033[1m\033[37m\033[2J\033[001;001HBRISA:boot=ok\r\nBRISA:xboot=ok\n' > "$LOG"
+  run "$ROOT/tests/boot/check-markers.sh" "$LOG" boot=ok
+  [ "$status" -eq 0 ]
+}
+
+@test "marcador parecido com prefixo diferente não conta" {
+  printf 'BRISA:xboot=ok\n' > "$LOG"
+  run "$ROOT/tests/boot/check-markers.sh" "$LOG" boot=ok
+  [ "$status" -eq 1 ]
+}
