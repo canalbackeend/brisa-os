@@ -1,5 +1,4 @@
 # Itens de configs/releng/airootfs que o perfil herda (o resto do releng é descartado).
 etc/mkinitcpio.conf.d/archiso.conf
-etc/mkinitcpio.d/linux.preset
 etc/systemd/system/pacman-init.service
 etc/systemd/system/etc-pacman.d-gnupg.mount
