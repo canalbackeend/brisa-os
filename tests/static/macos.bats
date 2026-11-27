@@ -59,6 +59,7 @@ setup() {
 
 aplicar() {
   export HOME="$BATS_TEST_TMPDIR/home"; mkdir -p "$HOME"
+  unset XDG_CONFIG_HOME
   FAKE="$BATS_TEST_TMPDIR/bin"; mkdir -p "$FAKE"
   printf '#!/bin/sh\necho "$0 $*" >> "%s/calls"\n' "$BATS_TEST_TMPDIR" > "$FAKE/plasma-apply-lookandfeel"
   cp "$FAKE/plasma-apply-lookandfeel" "$FAKE/qdbus6"; chmod +x "$FAKE"/*
