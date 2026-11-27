@@ -49,3 +49,11 @@ setup() { ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"; }
   run grep -q 'gtk-engine-murrine' "$ROOT/pkgs/brisa-mactahoe-gtk/PKGBUILD"
   [ "$status" -eq 1 ]
 }
+
+@test "tema GTK usa os pacotes prontos de release/ (o install.sh depende de sudo/logname)" {
+  f="$ROOT/pkgs/brisa-mactahoe-gtk/PKGBUILD"
+  run grep -q 'install.sh' "$f"
+  [ "$status" -eq 1 ]
+  grep -q 'release/MacTahoe-Light.tar.xz' "$f"
+  grep -q 'release/MacTahoe-Dark.tar.xz' "$f"
+}
